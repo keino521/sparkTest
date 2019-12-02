@@ -22,12 +22,26 @@ object sparkTest {
     val words = lines.as[String].flatMap(_.split(" "))
     //计算wordcount
     val res = words.groupBy("value").count()
+    /*
+    //输出为文件格式
+    val query = res.writeStream
+      .outputMode("append")
+      .format("parquet")
+      .option("checkpointLocation", "D:\\360Downloads\\checkpoint")
+      .option("path","D:\\360Downloads\\1res")
+      .start()
+    //启动流计算
+    */
 
+    //输出到控制台中
     val query = res.writeStream
       .outputMode("complete")
       .format("console")
+      .queryName("helloworld")
+      .option("checkpointLocation", "D:\\360Downloads\\1res")
       .start()
-    //启动流计算
     query.awaitTermination()
+    println(query.lastProgress)
+
   }
 }
